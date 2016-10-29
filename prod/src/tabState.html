@@ -1,0 +1,99 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Save Tab State</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <style>
+      body {
+        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 100%;
+        width: 400px;
+      }
+      .wrapper{
+
+      }
+      .header, .content{
+        padding: 0.5em 0.8em;
+      }
+      .header {
+        background: rgb(61, 79, 93);
+      }
+      .content{
+        background: #e6e6e6;
+      }
+      .list-item{
+        padding: 0.5em 0.8em;
+        background:#9fa9b1;
+        margin: 0.1em 0;
+        display: relative;
+      }
+        .list-item .text{
+          margin: 0 0.5em;
+          color:white;
+          display:inline-block;
+          width:50%;
+        }
+        .btn-container{
+
+        }
+      .button-success,
+       .button-error,
+       .button-warning,
+       .button-secondary {
+           color: white;
+           border-radius: 0;
+           text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+       }
+       .button-success {
+            background: rgb(28, 184, 65); /* this is a green */
+        }
+
+        .button-error {
+            background: rgb(202, 60, 60); /* this is a maroon */
+        }
+
+        .button-warning {
+            background: rgb(223, 117, 20); /* this is an orange */
+        }
+
+        .button-secondary {
+            background: rgb(66, 184, 221); /* this is a light blue */
+        }
+        .base64-input{
+          width: 75%;
+          padding: 0.5em 0.8em;
+        }
+        .tooltip{
+          position: fixed;
+          background: rgba(215,215,215,0.7);
+          border: thin solid rgb(50,50,50);
+          padding: 0.5em 0.8em;
+          font-size: 0.8em;
+
+        }
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+     -->
+     <script src="tooltip.js"></script>
+    <script src="tabState.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="header">
+        <input type="button" value="New State" id="saveNewState" class="pure-button button-secondary"/>
+        <!-- commented the Share option... maybe add again later -->
+        <!-- <input type="button" value="Load External" id="loadShared" class="pure-button button-secondary"/> -->
+      </div>
+      <div class="content">
+        <div id='listContainer' class="list-container">
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

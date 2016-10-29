@@ -1,0 +1,33 @@
+{
+  "name": "tabstate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lidorl/tabstate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lidorl/tabstate/issues"
+  },
+  "homepage": "https://github.com/lidorl/tabstate#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "gulp": "^3.9.1",
+    "mongodb": "^2.2.11",
+    "monk": "^3.1.3",
+    "pump": "^1.0.1",
+    "uuid": "^2.0.3"
+  },
+  "devDependencies": {
+    "gulp-minify": "0.0.14",
+    "gulp-uglify": "^2.0.0",
+    "gulp-zip": "^3.2.0"
+  }
+}
