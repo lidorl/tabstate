@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function(){
       LIST_CONT_DIV_ID = '#listContainer';
 
   // the component responsible to save\load data from local storage
-  var lsConnector = {
+  var dataConnector = {
 
     data: {},
 
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function(){
         })
         while (name == undefined || name.length == 0)
           name = prompt('Enter a name for the state');
-        lsConnector.addItemToData(name, tabs);
+        dataConnector.addItemToData(name, tabs);
         this.render();
       }.bind(this))
     },
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     render: function(){
       var scope = this,
-          data = lsConnector.getData(),
+          data = dataConnector.getData(),
           names = Object.keys(data),
           el;
 
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function(){
       btn.type = 'button';
       btn.value = 'Remove';
       btn.addEventListener('click', function(){
-        lsConnector.deleteItem(name);
+        dataConnector.deleteItem(name);
         this.render();
       }.bind(this))
       container.appendChild(btn);
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // init
     init: function(){
-      lsConnector.init();
+      dataConnector.init();
       this.bindHandlers();
       this.render();
     }

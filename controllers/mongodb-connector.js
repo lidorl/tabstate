@@ -52,3 +52,15 @@ exports.createUser = (db, _user, next) => {
       next(err);
     })
 }
+
+exports.updateUser = (db, uuid, data, next) => {
+  const collection = db.get(COLL_NAME);
+  collection.findOneAndUpdate({ uuid: uuid, data: data})
+    .then((user) => {
+      next(null,user);
+    })
+    .catch((err) => {
+      console.log('error creating user');
+      next(err);
+    })
+}

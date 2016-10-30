@@ -1,11 +1,12 @@
 const dbConnector = require('./mongodb-connector.js');
 const uuid = require('uuid');
+const jres = require('./json-response.js');
 
 //get a list of all the users
 exports.getUsers = (req, res, next) => {
   dbConnector.getUserList(req.db , (err, users) => {
     (!err)
-      res.send(users);
+      res.send(jres.ok(users));
   });
 }
 
@@ -14,7 +15,7 @@ exports.getUser = (req, res, next) => {
   if (req.params.id){
     dbConnector.getUser(req.db, req.params.id, (err, user) => {
       if (!err)
-        res.send(user);
+        res.send(jres.ok(user));
     })
   }
 };
@@ -29,10 +30,10 @@ exports.createUser = (req, res, next) => {
   }
   dbConnector.createUser(req.db, user_obj, (err, user) => {
     if (!err)
-      res.send(user);
+      res.send(jres.ok(user));
     else {
       console.log(err);
-      res.send(`{ err: ${err}}`);
+      res.send(jres.error(err));
     }
   })
 }
@@ -41,13 +42,14 @@ exports.createUser = (req, res, next) => {
 exports.updateUser = (req, res, next) => {
   const id = req.params.id;
   const data = req.body.data;
-  console.log(`uuid: ${id}, data: ${data}`);
-  // dbConnector.updateUser(req.db, { uuid: id, data: data}, (err,user) => {
-  //   if (!err)
-  //     res.send('OK');
-  //   else {
-  //     console.log('error updating user: ' + err);
-  //     res.send(`{ err: ${err} }`);
-  //   }
-  // })
+  console.log(`updating user -> uuid: ${id}, data: ${data}`);
+  //TODO validate the data object before sending it to the db
+  dbConnector.updateUser(req.db, id, data, (err,user) => {
+    if (!err)
+      res.send(jres.ok(user));
+    else {
+      console.log('error updating user: ' + err);
+      res.send(jres.error(err));
+    }
+  })
 };

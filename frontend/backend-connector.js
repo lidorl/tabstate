@@ -28,10 +28,15 @@ var dbConnector = {
     var url = serverHostName + 'users/find/' + uuid;
     _.get(url, function(result){
       console.log(result);
+      //extreact users data from response
     })
   },
   create: function(next){
-
+    var url = serverHostName + 'users/create';
+    _.get(url, function(result){
+      console.log(result);
+      //need to exrract the new uuid key for the user
+    })
   },
   update: function(data, next){
 
