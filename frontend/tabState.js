@@ -29,14 +29,25 @@ document.addEventListener('DOMContentLoaded', function(){
     },
 
     load: function(){
-      var data = localStorage.getItem(LS_KEY);
-      if (data != undefined)
-        data = JSON.parse(data);
-      return data;
+      var uuid = localStorage.getItem(LS_KEY);
+      if (uuid && JSON.parse(uuid).uuid){
+        console.log('loading data from server');
+        dbConnector.get(uuid, function(response){
+          if (response.status == 'ok')
+            this.data = response.data;
+        }.bind(this))
+      }
+      else {
+        console.log('creating new user');
+        dbConnector.create(function(response){
+          if (response.status == 'ok')
+            localStorage.setItem(LS_KEY, JSON.stringify({ uuid: response.data.uuid }));
+        })
+      }
     },
 
     save: function(){
-      localStorage.setItem(LS_KEY, JSON.stringify(this.data));
+      //localStorage.setItem(LS_KEY, JSON.stringify(this.data));
     },
 
     addItemToData: function(name, tabs){

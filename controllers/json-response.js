@@ -5,6 +5,6 @@ exports.ok = function(data){
   return { status: 'ok', data: data};
 }
 
-exports.error = fuction(err){
+exports.error = function(err){
   return { status: 'error', error: err};
 }
