@@ -1,25 +1,20 @@
-//creates a DOM element
-var _create = function(type, id, classList){
-  var element = document.createElement(type);
-  if (id)
-    element.id = id;
-  if (classList)
-    element.classList = classList;
-  return element;
-}
-
-// wait for document to load
 document.addEventListener('DOMContentLoaded', function(){
 
-  // the local storage key
   var LS_KEY = 'tabStateLSKey';
 
-  //some consts
   var SAVE_NEW_BTN_ID = '#saveNewState',
       //LOAD_SHARED_BTN_ID = '#loadShared',
       LIST_CONT_DIV_ID = '#listContainer';
 
-  // the component responsible to save\load data from local storage
+  var _create = function(type, id, classList){
+    var element = document.createElement(type);
+    if (id)
+      element.id = id;
+    if (classList)
+      element.classList = classList;
+    return element;
+  }
+
   var lsConnector = {
 
     data: {},
@@ -62,12 +57,10 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-  // the logic controller
   var TabState = {
 
     listElement: document.querySelector(LIST_CONT_DIV_ID),
 
-    //returns an array of all the open tabs
     getCurrentTabState: function(next){
       var queryInfo = { currentWindow: true };
       chrome.tabs.query( queryInfo , function(result){
@@ -142,10 +135,8 @@ document.addEventListener('DOMContentLoaded', function(){
     createListItemText: function(name,container){
       var text = _create('span', '', 'text'),
           _name = name;
-      if (name.length > 15){
-        _name = name.substring(0,15) + '...'; //display only a substring
-        this.addTooltip(text, name); // add the full name to the tooltip
-      }
+      if (name.length > 10)
+        _name = name.substring(0,10) + '...';
       text.innerHTML = _name;
       container.appendChild(text);
     },
@@ -165,8 +156,10 @@ document.addEventListener('DOMContentLoaded', function(){
       btn.type = 'button';
       btn.value = 'Remove';
       btn.addEventListener('click', function(){
-        lsConnector.deleteItem(name);
-        this.render();
+		 if (confirm("Are You Sure?")){
+			lsConnector.deleteItem(name);
+			this.render();
+		}
       }.bind(this))
       container.appendChild(btn);
     },
@@ -183,11 +176,6 @@ document.addEventListener('DOMContentLoaded', function(){
       container.appendChild(btn);
     },
 
-    addTooltip: function(el, text){
-      el.dataset.tooltip = text;
-      Tooltip.bind(el);
-    },
-
     createTextInputWithBase64: function(str){
       var input = _create('input', '', 'base64-input');
       input.type = "text";
@@ -201,12 +189,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // init
     init: function(){
-      lsConnector.init();
       this.bindHandlers();
       this.render();
     }
-  }
 
+  }
+  lsConnector.init();
   TabState.init();
 
 });

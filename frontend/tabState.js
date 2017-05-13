@@ -1,26 +1,21 @@
-//creates a DOM element
-var _create = function(type, id, classList){
-  var element = document.createElement(type);
-  if (id)
-    element.id = id;
-  if (classList)
-    element.classList = classList;
-  return element;
-}
-
-// wait for document to load
 document.addEventListener('DOMContentLoaded', function(){
 
-  // the local storage key
   var LS_KEY = 'tabStateLSKey';
 
-  //some consts
   var SAVE_NEW_BTN_ID = '#saveNewState',
       //LOAD_SHARED_BTN_ID = '#loadShared',
       LIST_CONT_DIV_ID = '#listContainer';
 
-  // the component responsible to save\load data from local storage
-  var dataConnector = {
+  var _create = function(type, id, classList){
+    var element = document.createElement(type);
+    if (id)
+      element.id = id;
+    if (classList)
+      element.classList = classList;
+    return element;
+  }
+
+  var lsConnector = {
 
     data: {},
 
@@ -29,25 +24,14 @@ document.addEventListener('DOMContentLoaded', function(){
     },
 
     load: function(){
-      var uuid = localStorage.getItem(LS_KEY);
-      if (uuid && JSON.parse(uuid).uuid){
-        console.log('loading data from server');
-        dbConnector.get(uuid, function(response){
-          if (response.status == 'ok')
-            this.data = response.data;
-        }.bind(this))
-      }
-      else {
-        console.log('creating new user');
-        dbConnector.create(function(response){
-          if (response.status == 'ok')
-            localStorage.setItem(LS_KEY, JSON.stringify({ uuid: response.data.uuid }));
-        })
-      }
+      var data = localStorage.getItem(LS_KEY);
+      if (data != undefined)
+        data = JSON.parse(data);
+      return data;
     },
 
     save: function(){
-      //localStorage.setItem(LS_KEY, JSON.stringify(this.data));
+      localStorage.setItem(LS_KEY, JSON.stringify(this.data));
     },
 
     addItemToData: function(name, tabs){
@@ -73,12 +57,10 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-  // the logic controller
   var TabState = {
 
     listElement: document.querySelector(LIST_CONT_DIV_ID),
 
-    //returns an array of all the open tabs
     getCurrentTabState: function(next){
       var queryInfo = { currentWindow: true };
       chrome.tabs.query( queryInfo , function(result){
@@ -94,9 +76,14 @@ document.addEventListener('DOMContentLoaded', function(){
         result.forEach(function(tab){
           tabs.push({ title: encodeURI(tab.title), url: encodeURI(tab.url)});
         })
-        while (name == undefined || name.length == 0)
+        while (name == undefined || name.length == 0){
           name = prompt('Enter a name for the state');
-        dataConnector.addItemToData(name, tabs);
+          debugger;
+          if (name === null)
+            return;
+        }
+
+        lsConnector.addItemToData(name, tabs);
         this.render();
       }.bind(this))
     },
@@ -129,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     render: function(){
       var scope = this,
-          data = dataConnector.getData(),
+          data = lsConnector.getData(),
           names = Object.keys(data),
           el;
 
@@ -153,10 +140,8 @@ document.addEventListener('DOMContentLoaded', function(){
     createListItemText: function(name,container){
       var text = _create('span', '', 'text'),
           _name = name;
-      if (name.length > 15){
-        _name = name.substring(0,15) + '...'; //display only a substring
-        this.addTooltip(text, name); // add the full name to the tooltip
-      }
+      if (name.length > 10)
+        _name = name.substring(0,10) + '...';
       text.innerHTML = _name;
       container.appendChild(text);
     },
@@ -176,8 +161,10 @@ document.addEventListener('DOMContentLoaded', function(){
       btn.type = 'button';
       btn.value = 'Remove';
       btn.addEventListener('click', function(){
-        dataConnector.deleteItem(name);
-        this.render();
+		 if (confirm("Are You Sure?")){
+			lsConnector.deleteItem(name);
+			this.render();
+		}
       }.bind(this))
       container.appendChild(btn);
     },
@@ -194,11 +181,6 @@ document.addEventListener('DOMContentLoaded', function(){
       container.appendChild(btn);
     },
 
-    addTooltip: function(el, text){
-      el.dataset.tooltip = text;
-      Tooltip.bind(el);
-    },
-
     createTextInputWithBase64: function(str){
       var input = _create('input', '', 'base64-input');
       input.type = "text";
@@ -212,12 +194,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // init
     init: function(){
-      dataConnector.init();
       this.bindHandlers();
       this.render();
     }
-  }
 
+  }
+  lsConnector.init();
   TabState.init();
 
 });

@@ -4,7 +4,7 @@ const uglify = require('gulp-uglify');
 const pump = require('pump');
 
 gulp.task('default', () =>{
-  console.log("gulp running");
+  console.log("no default task, run gulp prod or gulp zip");
 })
 
 gulp.task('prod', () => {
